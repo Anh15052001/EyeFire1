@@ -9,7 +9,7 @@ import os
 encoder_model = 'data/model/facenet_keras.h5'
 people_dir = 'data/people'
 encodings_path = 'data/encodings/encodings.pkl'
-test_img_path = 'data/test/3.jpg'
+test_img_path = 'data/gen_test/13.jpg'
 #test_res_path = 'data/results/friends.jpg'
 
 recognition_t = 0.3
@@ -42,11 +42,13 @@ for res in results:
         cv2.rectangle(img, pt_1, pt_2, (0, 0, 255), 2)
         cv2.putText(img, name, pt_1, cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
     else:
-        cv2.rectangle(img, pt_1, pt_2, (0, 255, 0), 2)
-        print(pt_1)
-        print(pt_2)
-        cropped_img = img[pt_1[1]-30:pt_2[1]+30, pt_1[0]-30:pt_2[0]+30]
-        cv2.imshow("Cropped image", cropped_img)
+        #cv2.rectangle(img, pt_1, pt_2, (0, 255, 0), 2)
+        if(pt_1[1] < 30 or pt_1[0] < 30):
+            cropped_img = img[pt_1[1] - 15:pt_2[1] + 20, pt_1[0] - 15:pt_2[0] + 20]
+        else:
+            cropped_img = img[pt_1[1] - 30:pt_2[1] + 30, pt_1[0] - 30:pt_2[0] + 30]
+
+
         print(distance)
         cv2.putText(img, name + f'__{distance:.2f}', pt_1, cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
 
