@@ -1,0 +1,4 @@
+tensorflow==1.15.0
+keras==2.3
+mtcnn
+h5py==2.10.0
