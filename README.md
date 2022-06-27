@@ -6,7 +6,7 @@
 + The third, you can train model with your dataset in directory data with file recognizer.ipynb
 # Recognition
 + You can run 03_face_recognizer_image.py so that face recognition through image
-+ You can run 03_face_recognizer_image.py so that face recognition through webcam
++ You can run 03_face_recognizer_camera.py so that face recognition through webcam
 # Detect Threshold Blur
 + The first, you can crop face from dataset by file: gen_face_data.py
 + The second, you can find value threshold blur through file: detect_threshold_blur.py
