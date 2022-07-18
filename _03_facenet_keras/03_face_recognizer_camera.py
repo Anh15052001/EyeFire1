@@ -3,7 +3,26 @@ import mtcnn
 from keras.models import load_model
 from utils import *
 import time
+import imutils
+def variance_of_Laplacian(image, size=60):
+    (h, w) = image.shape
+    (cX, cY) = (int(w / 2.0), int(h / 2.0))
+    # calculate detect blur by fft
+    fft = np.fft.fft2(image)
+    # shift the zero frequency component
+    fftShift = np.fft.fftshift(fft)
+    # check is vis = True will visualize
 
+    fftShift[cY - size:cY + size, cX - size:cX + size] = 0
+    fftShift = np.fft.ifftshift(fftShift)
+    recon = np.fft.ifft2(fftShift)
+    # compute the magnitude spectrum of the reconstructed image,
+    # then compute the mean of the magnitude values
+    magnitude = 20 * np.log(np.abs(recon))
+    mean = np.mean(magnitude)
+    # the image will be considered "blurry" if the mean value of the
+    # magnitudes is less than the threshold value
+    return mean
 def recognize(img,
               detector,
               encoder,
@@ -53,9 +72,15 @@ if __name__ == '__main__':
         if not ret:
             print("no frame:(")
             break
-        frame = recognize(frame, face_detector, face_encoder, encoding_dict)
-        end_time = time.time()
-        print("During time: ", end_time-start_time)
+        orig = imutils.resize(frame, width=500)
+        gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+        thresh = variance_of_Laplacian(gray)
+        if thresh < 10:
+            cv2.putText(frame, "Too blur", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
+        else:
+            frame = recognize(frame, face_detector, face_encoder, encoding_dict)
+            end_time = time.time()
+            print("During time: ", end_time-start_time)
         cv2.imshow('camera', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
